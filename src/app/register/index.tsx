@@ -6,10 +6,13 @@ import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { CustomCheckbox } from "../../components/Checkbox";
 import { Button } from "../../components/Button";
+import { AccountProps } from "../../contexts/AccountFormContex";
+import { useAccountForm } from "../../hooks/useAccountForm";
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { control, handleSubmit, formState: { errors }, getValues } = useForm();
+  const {updateFormData} = useAccountForm();
+  const { control, handleSubmit, formState: { errors }, getValues } = useForm<AccountProps>();
   const emailRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
@@ -18,8 +21,9 @@ export default function RegisterScreen() {
   const [isPassword, setIsPassword] = useState(false);
   const [isConfirmPassword, setIsConfirmPassword] = useState(false);
 
-  function handleNextStep(data:any) {
-    router.push("/login");
+  function handleNextStep(data: AccountProps) {
+    updateFormData(data);
+    router.push("/uploadPhoto");
   }
 
   function validateConfirmPassword(passwordConfirmation: string) {
@@ -142,7 +146,7 @@ export default function RegisterScreen() {
                     label="I agree to the terms & Conditions"
                 />
                 <Button
-                    title="Register"
+                    title="Next"
                     onPress={handleSubmit(handleNextStep)}
                 />
                 <View style={{ flexDirection: "row", alignItems: "center" }}>

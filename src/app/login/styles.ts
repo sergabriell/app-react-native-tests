@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
   title: { 
     fontSize: 30, 
     fontWeight: "bold",
-    marginBottom: 30 
+    marginBottom: 30,
+    color: '#454B60'
 },
   areaInput:{
     width: '100%',

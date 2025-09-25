@@ -5,6 +5,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { styles } from "./styles";
 import { MaskedTextInput} from "react-native-mask-text";
+import { AccountProps } from "../../contexts/AccountFormContex";
 
 type MaskedInputProps = TextInputProps & {
   mask?: string;
@@ -13,7 +14,7 @@ type MaskedInputProps = TextInputProps & {
 
 type Props = {
     error?: string;
-    formProps: UseControllerProps;
+    formProps: UseControllerProps<AccountProps>;
     inputProps: MaskedInputProps;
     onToggle?: () => void;
     isPassword?: boolean;
