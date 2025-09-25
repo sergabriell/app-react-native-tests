@@ -5,10 +5,13 @@ import { Input } from "../../components/Input";
 import { set, useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { Button } from "../../components/Button";
+import { AccountProps } from "../../contexts/AccountFormContex";
+import { useAccountForm } from "../../hooks/useAccountForm";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { control, handleSubmit, formState: {errors} } = useForm();
+  const {accountFormData} = useAccountForm();
+  const { control, handleSubmit, formState: {errors} } = useForm<AccountProps>();
   const passwordRef = useRef<TextInput>(null);
   const [isPassword, setIsPassword] = useState(false);
 
