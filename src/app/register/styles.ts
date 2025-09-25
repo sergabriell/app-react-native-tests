@@ -23,21 +23,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
 },
-  btnLogin: {
-    backgroundColor: '#454B60',
-    width: '100%',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 13,
-    borderRadius: 10,
-    marginTop: 20,
-  },
-  txtBtnLogin: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  btnSocials: {
+ socials: {
     flexDirection: 'row', 
     gap: 20, 
     alignItems: 'center', 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Assuming Expo Vector Icons are installed
+import { MaterialIcons } from '@expo/vector-icons';
 import { styles } from './styles';
 
 type Props = {
