@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center", 
     padding: 55, 
     textAlign: 'center', 
-    gap: 18 
+    gap: 10 
 },
   titleLogo: {
     marginBottom: 18,

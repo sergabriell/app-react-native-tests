@@ -22,6 +22,8 @@ export const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
+    position: 'relative',
+    top:-8
 },
   btnSocials: {
     flexDirection: 'row', 
