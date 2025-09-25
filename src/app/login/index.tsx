@@ -2,17 +2,18 @@ import { View, Text, Image, TouchableOpacity, Keyboard, Platform, ScrollView, To
 import { useRouter } from "expo-router";
 import { styles } from "./styles";
 import { Input } from "../../components/Input";
-import { useForm } from "react-hook-form";
-import { useRef } from "react";
+import { set, useForm } from "react-hook-form";
+import { useRef, useState } from "react";
 import { Button } from "../../components/Button";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState: {errors} } = useForm();
   const passwordRef = useRef<TextInput>(null);
+  const [isPassword, setIsPassword] = useState(false);
 
   function handleNextStep(data:any) {
-    console.log(data);
+    router.push("/profile");
   }
 
   return (
@@ -24,17 +25,28 @@ export default function LoginScreen() {
                 />
                 <Text style={styles.titleLogo}>LOGO</Text>
                 <Text style={styles.title}>Login</Text>
-                <Text style={[styles.text, {textAlign:"center", marginBottom: 15, fontWeight: 'bold'}]}>Enter your username and password to login</Text>
+                {
+                    (!errors.password?.message && !errors.username?.message) ? <Text style={[styles.text, {textAlign:"center", marginBottom: 15, fontWeight: 'bold'}]}>
+                                    Enter your username and password to login
+                                    </Text>
+                                 : <Text style={[styles.text, {textAlign:"center", marginBottom: 15, fontWeight: 'bold', color: "#FF0000"}]}>
+                                    Invalid username and / or  password Please try again
+                                    </Text>
+                }
                 <Input
                     formProps={{
                         name: 'username', 
-                        control
+                        control,
+                        rules: { 
+                            required: "Please enter your username" 
+                         }
                     }}
                     inputProps={{
                         placeholder: 'Username',
                         onSubmitEditing: () => passwordRef.current?.focus(),
                         returnKeyType: 'next'
                     }}
+                    error={errors.username?.message}
                 />
                 <TouchableOpacity style={styles.areaInput}>
                     <Text>Forgot Username?</Text>
@@ -42,21 +54,27 @@ export default function LoginScreen() {
                 <Input
                     formProps={{
                         name: 'password', 
-                        control
+                        control,
+                        rules:{
+                            required: "Please enter your password"
+                        }
                     }}
                     inputProps={{
                         placeholder: 'Password',
-                        secureTextEntry: true,
+                        secureTextEntry: !isPassword,
                         onSubmitEditing: handleSubmit(handleNextStep),
                     }}
                     ref={passwordRef}
+                    onToggle={() => setIsPassword(!isPassword)}
+                    isPassword={isPassword}
+                    error={errors.password?.message}
                 />
                 <TouchableOpacity style={styles.areaInput}>
                     <Text>Forgot Password?</Text>
                 </TouchableOpacity>
                 <Button
                     title="Login"
-                    onPress={() => router.push("/register")}
+                    onPress={handleSubmit(handleNextStep)}
                 />
                 <Text style={styles.text}>Or login in with</Text>
                 <View style={{flexDirection: 'row', gap: 21, width: '100%', justifyContent: 'center', marginTop: 10, marginBottom: 20}}>

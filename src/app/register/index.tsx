@@ -9,12 +9,22 @@ import { Button } from "../../components/Button";
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState: { errors }, getValues } = useForm();
+  const emailRef = useRef<TextInput>(null);
+  const phoneRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+  const passwordConfirmRef = useRef<TextInput>(null);
   const [isChecked, setIsChecked] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isConfirmPassword, setIsConfirmPassword] = useState(false);
 
   function handleNextStep(data:any) {
-    console.log(data);
+    router.push("/login");
+  }
+
+  function validateConfirmPassword(passwordConfirmation: string) {
+    const { password } = getValues();
+    return passwordConfirmation === password || "Passwords do not match";
   }
 
   return (
@@ -30,56 +40,101 @@ export default function RegisterScreen() {
                 <Input
                     formProps={{
                         name: 'name', 
-                        control
+                        control,
+                        rules: { 
+                            required: "Please enter your name" 
+                        }
                     }}
                     inputProps={{
                         placeholder: 'Name',
-                        onSubmitEditing: () => passwordRef.current?.focus(),
+                        onSubmitEditing: () => emailRef.current?.focus(),
                         returnKeyType: 'next'
                     }}
+                    error={errors.name?.message}
                 />
                 <Input
                     formProps={{
                         name: 'email', 
-                        control
+                        control,
+                        rules: { 
+                            required: "Please enter your email address",
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Invalid email address"
+                            }
+                         }
                     }}
                     inputProps={{
-                        placeholder: 'Email Address'
+                        placeholder: 'Email Address',
+                        onSubmitEditing: () => phoneRef.current?.focus(),
+                        returnKeyType: 'next'
                     }}
-                    ref={passwordRef}
+                    ref={emailRef}
+                    error={errors.email?.message}
                 />
                 <Input
                     formProps={{
-                        name: 'number', 
-                        control
+                        name: "number",
+                        control,
+                        rules: {
+                            required: "Please enter your mobile number",
+                            pattern: {
+                                value: /^\d{11}$/,
+                                message: "Invalid mobile number",
+                            },
+                        },
                     }}
                     inputProps={{
-                        placeholder: 'Mobile Number'
+                        placeholder: "(99) 9 9999-9999",
+                        keyboardType: "numeric",
+                        mask: "(99) 9 9999-9999",
+                        onSubmitEditing: () => passwordRef.current?.focus(),
+                        returnKeyType: 'next'
                     }}
-                    ref={passwordRef}
+                    error={errors.number?.message}
+                    ref={phoneRef}
                 />
                 <Input
                     formProps={{
                         name: 'password', 
-                        control
-                    }}
+                        control,
+                        rules: { 
+                            required: "Please enter your password",
+                            pattern: {
+                                value: /^(?=.*[\d\W]).{8,}$/,
+                                message: "Must be 8 or more characters and contain at least 1 number or special character"
+                            }
+                        }
+                    }}   
                     inputProps={{
                         placeholder: 'Password',
-                        secureTextEntry: true,
+                        secureTextEntry: !isPassword,
+                        onSubmitEditing: () => passwordConfirmRef.current?.focus(),
+                        returnKeyType: 'next'
                     }}
                     ref={passwordRef}
+                    onToggle={() => setIsPassword(!isPassword)}
+                    isPassword={isPassword}
+                    error={errors.password?.message}
                 />
                 <Input
                     formProps={{
                         name: 'confirmPassword', 
-                        control
+                        control,
+                        rules: {
+                            required: "Please confirm your password",
+                            validate: validateConfirmPassword
+                        }
                     }}
                     inputProps={{
                         placeholder: 'Confirm Password',
-                        secureTextEntry: true,
+                        secureTextEntry: !isConfirmPassword,
                         onSubmitEditing: handleSubmit(handleNextStep),
                     }}
-                    ref={passwordRef}
+                    ref={passwordConfirmRef}
+                    onToggle={() => setIsConfirmPassword(!isConfirmPassword)}
+                    isPassword={isConfirmPassword}
+                    error={errors.confirmPassword?.message}
                 />
                 <CustomCheckbox 
                     onToggle={() => setIsChecked(!isChecked)}
@@ -88,7 +143,7 @@ export default function RegisterScreen() {
                 />
                 <Button
                     title="Register"
-                    onPress={() => router.push("/login")}
+                    onPress={handleSubmit(handleNextStep)}
                 />
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text style={styles.text}>Need help? Visit our </Text>
